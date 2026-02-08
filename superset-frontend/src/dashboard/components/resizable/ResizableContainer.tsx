@@ -98,7 +98,7 @@ const StyledResizable = styled(Resizable)`
 
     .resize-handle {
       opacity: 0;
-      z-index: 10;
+      z-index: 100;
 
       &--bottom-right {
         position: absolute;
@@ -229,13 +229,13 @@ export default function ResizableContainer({
       width: adjustableWidth
         ? (widthStep + gutterWidth) * widthMultiple - gutterWidth
         : (staticWidthMultiple && staticWidthMultiple * widthStep) ||
-          staticWidth ||
-          undefined,
+        staticWidth ||
+        undefined,
       height: adjustableHeight
         ? heightStep * heightMultiple
         : (staticHeightMultiple && staticHeightMultiple * heightStep) ||
-          staticHeight ||
-          undefined,
+        staticHeight ||
+        undefined,
     }),
     [
       adjustableWidth,
@@ -288,20 +288,20 @@ export default function ResizableContainer({
       maxWidth={
         adjustableWidth && size.width
           ? Math.max(
-              size.width,
-              Math.min(
-                proxyToInfinity,
-                maxWidthMultiple * (widthStep + gutterWidth) - gutterWidth,
-              ),
-            )
+            size.width,
+            Math.min(
+              proxyToInfinity,
+              maxWidthMultiple * (widthStep + gutterWidth) - gutterWidth,
+            ),
+          )
           : undefined
       }
       maxHeight={
         adjustableHeight && size.height
           ? Math.max(
-              size.height,
-              Math.min(proxyToInfinity, maxHeightMultiple * heightStep),
-            )
+            size.height,
+            Math.min(proxyToInfinity, maxHeightMultiple * heightStep),
+          )
           : undefined
       }
       size={size}

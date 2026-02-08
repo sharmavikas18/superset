@@ -30,7 +30,7 @@ import cx from 'classnames';
 import { t } from '@apache-superset/core';
 import { FeatureFlag, isFeatureEnabled, JsonObject } from '@superset-ui/core';
 import { css, styled, SupersetTheme } from '@apache-superset/core/ui';
-import { Icons, Constants } from '@superset-ui/core/components';
+import { Icons } from '@superset-ui/core/components';
 import {
   Draggable,
   Droppable,
@@ -47,7 +47,6 @@ import { BACKGROUND_TRANSPARENT } from 'src/dashboard/util/constants';
 import { isEmbedded } from 'src/dashboard/util/isEmbedded';
 import { EMPTY_CONTAINER_Z_INDEX } from 'src/dashboard/constants';
 import { isCurrentUserBot } from 'src/utils/isBot';
-import { useDebouncedEffect } from '../../../../explore/exploreUtils';
 
 export type RowProps = {
   id: string;
@@ -97,6 +96,7 @@ const GridRow = styled.div<{ editMode: boolean }>`
       align-self: center;
       &.empty-droptarget--vertical {
         min-width: ${theme.sizeUnit * 4}px;
+        align-self: stretch;
         &:not(:last-child) {
           width: ${theme.sizeUnit * 4}px;
         }
@@ -157,7 +157,6 @@ const Row = memo((props: RowProps) => {
   const [isFocused, setIsFocused] = useState(false);
   const [isInView, setIsInView] = useState(false);
   const [hoverMenuHovered, setHoverMenuHovered] = useState(false);
-  const [containerHeight, setContainerHeight] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const isComponentVisibleRef = useRef(isComponentVisible);
 
@@ -215,21 +214,6 @@ const Row = memo((props: RowProps) => {
     };
   }, []);
 
-  useDebouncedEffect(
-    () => {
-      const updatedHeight = containerRef.current?.clientHeight;
-      if (
-        editMode &&
-        containerRef.current &&
-        updatedHeight !== containerHeight
-      ) {
-        setContainerHeight(updatedHeight ?? null);
-      }
-    },
-    Constants.FAST_DEBOUNCE,
-    [editMode, containerHeight],
-  );
-
   const handleChangeFocus = useCallback((nextFocus: boolean) => {
     setIsFocused(Boolean(nextFocus));
   }, []);
@@ -283,6 +267,7 @@ const Row = memo((props: RowProps) => {
         disableClick
         menuItems={[
           <BackgroundStyleDropdown
+            key={`${rowComponent.id}-background`}
             id={`${rowComponent.id}-background`}
             value={backgroundStyle.value}
             onChange={handleChangeBackground}
@@ -319,14 +304,14 @@ const Row = memo((props: RowProps) => {
             <Droppable
               {...(rowItems.length === 0
                 ? {
-                    component: rowComponent,
-                    parentComponent: rowComponent,
-                    dropToChild: true,
-                  }
+                  component: rowComponent,
+                  parentComponent: rowComponent,
+                  dropToChild: true,
+                }
                 : {
-                    component: rowItems[0],
-                    parentComponent: rowComponent,
-                  })}
+                  component: rowItems[0],
+                  parentComponent: rowComponent,
+                })}
               depth={depth}
               index={0}
               orientation="row"
@@ -338,7 +323,7 @@ const Row = memo((props: RowProps) => {
               )}
               editMode
               style={{
-                height: rowItems.length > 0 ? containerHeight : '100%',
+                height: '100%',
                 ...(rowItems.length > 0 && { width: 16 }),
               }}
             >
@@ -380,12 +365,12 @@ const Row = memo((props: RowProps) => {
                       'empty-droptarget',
                       'empty-droptarget--vertical',
                       remainColumnCount === 0 &&
-                        itemIndex === rowItems.length - 1 &&
-                        'droptarget-side',
+                      itemIndex === rowItems.length - 1 &&
+                      'droptarget-side',
                     )}
                     editMode
                     style={{
-                      height: containerHeight,
+                      height: '100%',
                       ...(remainColumnCount === 0 &&
                         itemIndex === rowItems.length - 1 && { width: 16 }),
                     }}
@@ -406,7 +391,6 @@ const Row = memo((props: RowProps) => {
       backgroundStyle.className,
       backgroundStyle.value,
       columnWidth,
-      containerHeight,
       depth,
       editMode,
       handleChangeBackground,
