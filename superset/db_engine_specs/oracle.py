@@ -47,14 +47,14 @@ class OracleEngineSpec(BaseEngineSpec):
 
     _time_grain_expressions = {
         None: "{col}",
-        TimeGrain.SECOND: "CAST({col} as DATE)",
-        TimeGrain.MINUTE: "TRUNC(CAST({col} as DATE), 'MI')",
-        TimeGrain.HOUR: "TRUNC(CAST({col} as DATE), 'HH')",
-        TimeGrain.DAY: "TRUNC(CAST({col} as DATE), 'DDD')",
-        TimeGrain.WEEK: "TRUNC(CAST({col} as DATE), 'WW')",
-        TimeGrain.MONTH: "TRUNC(CAST({col} as DATE), 'MONTH')",
-        TimeGrain.QUARTER: "TRUNC(CAST({col} as DATE), 'Q')",
-        TimeGrain.YEAR: "TRUNC(CAST({col} as DATE), 'YEAR')",
+        TimeGrain.SECOND: "CAST({col} as TIMESTAMP)",
+        TimeGrain.MINUTE: "CAST(TRUNC(CAST({col} as DATE), 'MI') AS TIMESTAMP)",
+        TimeGrain.HOUR: "CAST(TRUNC(CAST({col} as DATE), 'HH') AS TIMESTAMP)",
+        TimeGrain.DAY: "CAST(TRUNC(CAST({col} as DATE), 'DDD') AS TIMESTAMP)",
+        TimeGrain.WEEK: "CAST(TRUNC(CAST({col} as DATE), 'WW') AS TIMESTAMP)",
+        TimeGrain.MONTH: "CAST(TRUNC(CAST({col} as DATE), 'MONTH') AS TIMESTAMP)",
+        TimeGrain.QUARTER: "CAST(TRUNC(CAST({col} as DATE), 'Q') AS TIMESTAMP)",
+        TimeGrain.YEAR: "CAST(TRUNC(CAST({col} as DATE), 'YEAR') AS TIMESTAMP)",
     }
 
     @classmethod

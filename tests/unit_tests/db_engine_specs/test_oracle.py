@@ -54,7 +54,7 @@ def test_oracle_time_expression_reserved_keyword_1m_grain() -> None:
     col = column("decimal")
     expr = OracleEngineSpec.get_timestamp_expr(col, None, "P1M")
     result = str(expr.compile(dialect=oracle.dialect()))
-    assert result == "TRUNC(CAST(\"decimal\" as DATE), 'MONTH')"
+    assert result == "CAST(TRUNC(CAST(\"decimal\" as DATE), 'MONTH') AS TIMESTAMP)"
 
 
 @pytest.mark.parametrize(
